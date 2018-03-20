@@ -8,15 +8,14 @@
 </head>
 <body>
 <div>
-    <p>You've been redirected to this page because the login failed. <a href="/">Go back to top.</a></p>
+    <p>You've been redirected to this page because you did not have the proper role to access the test folder.</p>
+    <a href="/">Go back to the top to try again.</a></p>
 </div>
 <div id="logged-in" style="display: none">
-    <p>You are currently logged in as <span id="username"></span>, please proceed to the <a href="/test/">Test Folder</a>.</p>
-    <p>Or you can <a href="#" onclick="window.netlifyIdentity.open()">Logout</a>.</p>
+    <p>You are currently logged in with user email of '<span id="username"></span>'.
 </div>
 <div id="not-logged-in" style="display: none">
-    <p>You are not currently logged in, please <a href="#" onclick="window.netlifyIdentity.open()">login first</a>,
-        before proceeding to the <a href="/test/">Test Folder</a>.</p>
+    <p>You are not logged in.</p>
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -27,6 +26,8 @@
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
+                console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                console.log('user.email is ', user.email);
                 loggedIn = user ? true : false;
             }
 
@@ -44,8 +45,6 @@
 
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
-
-        updateLoggedIn();
     });
 </script>
 </body>

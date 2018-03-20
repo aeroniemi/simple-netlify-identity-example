@@ -45,12 +45,13 @@
             else {
                 $('#logged-in').hide();
                 $('#not-logged-in').show();
-                window.netlifyIdentity.open();
             }
         }
 
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
+
+        updateLoggedIn();
     });
 </script>
 </body>

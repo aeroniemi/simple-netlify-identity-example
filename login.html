@@ -26,8 +26,10 @@
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
-                console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                console.log('user.email is ', user.email);
+                if (user) {
+                    console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                    console.log('user.email is ', user.email);
+                }
                 loggedIn = user ? true : false;
             }
 

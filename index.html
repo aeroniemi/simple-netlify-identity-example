@@ -8,19 +8,19 @@
 </head>
 <body>
 <div>
-    <p>This page is meant to help test the Netlify Identity Widget. It is the top level index page.</p>
+    <p>This site is meant to help test the Netlify Identity Widget. This is the top level index page.</p>
     <p>From here you may only visit the <a href="/test/">Test Folder</a>,
-        if you have successfully logged in with 'admin' role.</p>
+        if you have successfully logged in with a user that has the 'admin' role.</p>
 </div>
 <div id="logged-in" style="display: none">
     <p>You are currently logged in with user email '<span id="username"></span>',
-        and you may proceed to the <a href="/test/">Test Folder</a>.</p>
-    <p>Or you may<a href="#" onclick="window.netlifyIdentity.open()">Logout</a>.</p>
+        and you should be able to proceed to the <a href="/test/">Test Folder</a>.</p>
+    <p>Or you may <a href="#" onclick="window.netlifyIdentity.open()">Logout</a>.</p>
 </div>
 <div id="not-logged-in" style="display: none">
     <p>You are not currently logged in, please <a href="#" onclick="window.netlifyIdentity.open()">login first</a>,
         before proceeding to the <a href="/test/">Test Folder</a>.</p>
-    <p>If you proceed to the test folder now, without logging in, it should fail and you will be redirected
+    <p>If you proceed to the test folder without logging in, that should fail with you being redirected
         to the login page.</p>
 </div>
 <script type="text/javascript">
@@ -32,8 +32,10 @@
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
-                console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                console.log('user.email is ', user.email);
+                if (user) {
+                    console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                    console.log('user.email is ', user.email);
+                }
                 loggedIn = user ? true : false;
             }
 

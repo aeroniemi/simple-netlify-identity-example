@@ -1,9 +1,9 @@
 exports.handler = function(event, context, callback) {
-    console.log("hello");
+    console.log("identity validate");
     console.log(event);
     console.log(context);
     callback(null, {
         statusCode: 200,
-        body: "Hello, World"
+        body: "identity validate"
     });
 };

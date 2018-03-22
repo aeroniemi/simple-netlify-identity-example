@@ -32,11 +32,18 @@
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
-                if (user) {
-                    console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                    console.log('user.email is ', user.email);
-                }
                 loggedIn = user ? true : false;
+
+                if (user) {
+                  console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                  console.log('user.email is ', user.email);
+                  console.log('access token is ' + user.token.access_token);
+                  user.jwt().then((jwt) => {
+                    console.log('this would be a good time to save this cookie');
+                    console.log(jwt);
+                    document.cookie = 'nf_jwt=' + jwt + '; path=/';
+                  });
+                }
             }
 
             if (loggedIn) {
@@ -53,7 +60,26 @@
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
 
+        // TODO: add something to close the login window after login is successful
+
         updateLoggedIn();
+
+
+    /*
+        I asked Netlify about why the nf_jwt cookie is not set when you use
+        Your test is valid and it looks like you setup your site correctly.
+        Right now there's an issue where the JWT token isn't saved to a nf_jwt cookie when you use an
+        external provider like Google to login. You can follow this issue, and add your comments, or even a
+        PR from (https://github.com/netlify/gotrue-js/issues/15).
+
+        There is a workaround. You can manually save the JWT token in a cookie named nf_jwt .
+        The token is available in the user object when you're logged in.
+        You can access it at netlifyIdentity.gotrue.currentUser().token.access_token .
+        You can renew the token by calling netlifyIdentity.gotrue.currentUser().jwt().then(jwt => console.log(jwt)) ,
+        and in the .then of the promise, save the token in a cookie. You can also call the function to save
+        the cookie in the netlifyIdentity.on("login", user => console.log(user)); event that is
+        fired when a user logs in successfully.
+  */
     });
 </script>
 </body>

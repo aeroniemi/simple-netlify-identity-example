@@ -1,4 +1,4 @@
 [build]
   publish = "public/"
-  command = "echo 'default context'"
+  command = "npm run build"
   functions = "functions/"

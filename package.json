@@ -1,0 +1,24 @@
+{
+  "name": "simple-netlify-identity-example",
+  "version": "1.0.0",
+  "description": "Example of how to configure Netlify Identity and Functions for our API Documentation web site",
+  "main": "public/index.html",
+  "scripts": {
+    "develop": "netlify-lambda serve src/lambda",
+    "build": "netlify-lambda build src/lambda",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudwan/simple-netlify-identity-example.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cloudwan/simple-netlify-identity-example/issues"
+  },
+  "homepage": "https://github.com/cloudwan/simple-netlify-identity-example#readme",
+  "devDependencies": {
+    "netlify-lambda": "^0.2.0"
+  }
+}

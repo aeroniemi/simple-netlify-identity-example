@@ -19,17 +19,16 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        // window.netlifyIdentity.init();
-
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
 
                 if (user) {
-                  console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                  console.log('user.email is ', user.email);
-                  console.log('access token is ' + user.token.access_token);
+                  // console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                  // console.log('user.email is ', user.email);
+                  // console.log('access token is ' + user.token.access_token);
+                  // TODO: check to see if we have the cookie before blindly renewing it
                   user.jwt().then((jwt) => {
                     console.log('this would be a good time to save this cookie');
                     console.log(jwt);

@@ -25,24 +25,22 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        // window.netlifyIdentity.init();
-
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
 
                 if (user) {
-                  console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                  console.log('user.email is ', user.email);
-                  console.log('access token is ' + user.token.access_token);
+                  // console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
+                  // console.log('user.email is ', user.email);
+                  // console.log('access token is ' + user.token.access_token);
+                  // TODO: check to see if we have the cookie before blindly renewing it
                   user.jwt().then((jwt) => {
                     console.log('this would be a good time to save this cookie');
                     console.log(jwt);
-                    document.cookie = 'nf_jwt=' + jwt + '; path=/';
+                    document.cookie = 'nf_jwt=' + jwt + '; path=/';  // TODO: add an expiration date (1 day ahead)
                     user = window.netlifyIdentity.gotrue.currentUser()
                     console.log('now after renewing the token, the user is ', user);
-                    // $('#netlify-identity-widget').hide();  // work-around for bug when returning from external provider
                     $('#username').text(user.email);
                     $('#logged-in').show();
                     $('#not-logged-in').hide();
@@ -58,7 +56,7 @@
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
 
-        // TODO: add something to close the login window after login is successful
+        // TODO: add something to close the login window after login is successful?
 
         updateLoggedIn();
 

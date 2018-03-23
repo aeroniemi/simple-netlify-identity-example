@@ -25,20 +25,26 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
+        function setOneDayCookie(name, value) {
+          var date = new Date();
+          date.setDate(date.getDate() + 1);
+          var expires = 'expires=' + date.toGMTString();
+          var newCookie = name + '=' + value + '; ' + expires + '; path=/';
+          console.log('adding cookie: ' + newCookie);
+          document.cookie = newCookie;
+        }
+
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ', user);
 
                 if (user) {
-                  // console.log('user.app_metadata is ', JSON.stringify(user.app_metadata));
-                  // console.log('user.email is ', user.email);
-                  // console.log('access token is ' + user.token.access_token);
                   // TODO: check to see if we have the cookie before blindly renewing it
+                  console.log('before', document.cookie);
                   user.jwt().then((jwt) => {
-                    console.log('this would be a good time to save this cookie');
-                    console.log(jwt);
-                    document.cookie = 'nf_jwt=' + jwt + '; path=/';  // TODO: add an expiration date (1 day ahead)
+                    setOneDayCookie('nf_jwt', jwt);
+                    console.log('after the cookie is ', document.cookie);
                     user = window.netlifyIdentity.gotrue.currentUser()
                     console.log('now after renewing the token, the user is ', user);
                     $('#username').text(user.email);

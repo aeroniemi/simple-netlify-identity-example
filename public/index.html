@@ -42,6 +42,7 @@
                     document.cookie = 'nf_jwt=' + jwt + '; path=/';
                     user = window.netlifyIdentity.gotrue.currentUser()
                     console.log('now after renewing the token, the user is ', user);
+                    $('#netlify-identity-widget').hide();  // work-around for bug when returning from external provider
                     $('#username').text(user.email);
                     $('#logged-in').show();
                     $('#not-logged-in').hide();

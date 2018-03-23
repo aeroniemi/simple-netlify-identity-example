@@ -4,14 +4,7 @@ exports.handler = function(event, context, callback) {
     console.log(user);
     console.log(event);
     console.log(context);
-    if (user.email === "van@fellupon.com") {
-      callback(null, {
-          statusCode: 401
-      });
-    }
-    else {
-      callback(null, {
-          statusCode: 200
-      });
-    }
+    callback(null, {
+        statusCode: 200
+    });
 };

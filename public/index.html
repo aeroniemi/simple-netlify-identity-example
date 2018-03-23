@@ -30,27 +30,25 @@
           date.setDate(date.getDate() + 1);
           var expires = 'expires=' + date.toGMTString();
           var newCookie = name + '=' + value + '; ' + expires + '; path=/';
-          console.log('adding cookie: ' + newCookie);
           document.cookie = newCookie;
         }
 
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
-                console.log('user is ', user);
-
                 if (user) {
-                  // TODO: check to see if we have the cookie before blindly renewing it
-                  console.log('before', document.cookie);
-                  user.jwt().then((jwt) => {
-                    setOneDayCookie('nf_jwt', jwt);
-                    console.log('after the cookie is ', document.cookie);
-                    user = window.netlifyIdentity.gotrue.currentUser()
-                    console.log('now after renewing the token, the user is ', user);
-                    $('#username').text(user.email);
-                    $('#logged-in').show();
-                    $('#not-logged-in').hide();
-                  });
+                  // Note: there's an issue where the JWT token isn't saved to nf_jwt cookie when you use an
+                  // external provider like Google to login. This is is https://github.com/netlify/gotrue-js/issues/15
+                  // Work-around: you can manually save the JWT token in a cookie named nf_jwt.
+                  // The access_token is available in the user object or you can renew the token by calling
+                  // netlifyIdentity.gotrue.currentUser().jwt().then(jwt => mySetCookie('nf_jwt', jwt))
+                  user.jwt()
+                    .then((jwt) => {
+                      setOneDayCookie('nf_jwt', jwt);
+                      $('#username').text(user.email);
+                      $('#logged-in').show();
+                      $('#not-logged-in').hide();
+                    });
                 }
                 else {
                     $('#logged-in').hide();
@@ -62,26 +60,7 @@
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
 
-        // TODO: add something to close the login window after login is successful?
-
         updateLoggedIn();
-
-
-    /*
-        I asked Netlify about why the nf_jwt cookie is not set when you use
-        Your test is valid and it looks like you setup your site correctly.
-        Right now there's an issue where the JWT token isn't saved to a nf_jwt cookie when you use an
-        external provider like Google to login. You can follow this issue, and add your comments, or even a
-        PR from (https://github.com/netlify/gotrue-js/issues/15).
-
-        There is a workaround. You can manually save the JWT token in a cookie named nf_jwt .
-        The token is available in the user object when you're logged in.
-        You can access it at netlifyIdentity.gotrue.currentUser().token.access_token .
-        You can renew the token by calling netlifyIdentity.gotrue.currentUser().jwt().then(jwt => console.log(jwt)) ,
-        and in the .then of the promise, save the token in a cookie. You can also call the function to save
-        the cookie in the netlifyIdentity.on("login", user => console.log(user)); event that is
-        fired when a user logs in successfully.
-  */
     });
 </script>
 </body>

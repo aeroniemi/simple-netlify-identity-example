@@ -16,7 +16,16 @@ exports.handler = function (event, context, callback) {
         message: 'identity login, context: ' + JSON.stringify(context),
         color: 'green'
     });
-    callback(null, {
-        statusCode: 200
-    });
+
+    hipchat.notify(
+        {
+            message: 'identity login, user 2nd time: ' + JSON.stringify(user),
+            color: 'green'
+        },
+        function() {
+            callback(null, {
+                statusCode: 200
+            });
+        }
+    );
 };

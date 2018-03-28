@@ -38,6 +38,7 @@
                 var user = window.netlifyIdentity.gotrue.currentUser();
                 console.log('user is ' + JSON.stringify(user));
                 if (user) {
+                  console.log('roles are ' + JSON.stringify(user.app_metadata.roles));
                   // Note: there's an issue where the JWT token isn't saved to nf_jwt cookie when you use an
                   // external provider like Google to login. This is is https://github.com/netlify/gotrue-js/issues/15
                   // Work-around: you can manually save the JWT token in a cookie named nf_jwt.

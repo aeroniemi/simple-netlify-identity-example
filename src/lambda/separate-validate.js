@@ -3,20 +3,20 @@ let hipchat = new HipChatNotify(4516663, 'tn8neyu93ei7x3jRnYrHuzNtq2RbXXGuIXwZTm
 
 exports.handler = function(event, context, callback) {
     const user = context.clientContext.user;
-    console.log("identity validate");
+    console.log("separate validate");
     hipchat.notify({
-        message: 'identity validate, user: ' + JSON.stringify(user),
+        message: 'separate validate, user: ' + JSON.stringify(user),
         color: 'yellow'
     });
     hipchat.notify({
-        message: 'identity validate, event: ' + JSON.stringify(event),
+        message: 'separate validate, event: ' + JSON.stringify(event),
         color: 'yellow'
     });
     hipchat.notify({
-        message: 'identity signup, context: ' + JSON.stringify(context),
+        message: 'separate signup, context: ' + JSON.stringify(context),
         color: 'yellow'
     });
     callback(null, {
-        statusCode: 401
+        statusCode: 200
     });
 };

@@ -1,8 +1,32 @@
 
 const request = require('request');
-
 const HipChatNotify = require('hipchat-notify');
 let hipchat = new HipChatNotify(4516663, 'tn8neyu93ei7x3jRnYrHuzNtq2RbXXGuIXwZTmwn');
+
+let putAdminRoleOnUser = function(identityUrl, userId, token) {
+    // using this library for http requests: https://github.com/request/request
+    // using this library at the api endpoint: https://github.com/netlify/gotrue
+    // use the PUT /admin/users api endpoint to add this to user record:
+    // {"app_metadata": {"authorization": {"roles": ["admin"]}}}
+    let putOptions = {
+        url: identityUrl + '/admin/users/' + userId,
+        method: 'PUT',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        json: true,
+        body: {
+            app_metadata: {"authorization": {"roles": ["admin"]}}
+        }
+    };
+    request(putOptions, function(error, response, body) {
+        hipchat.notify({
+            message: 'webhook, PUT request for userId= ' + userId + ' error=' + error +
+            ' response: ' + JSON.stringify(response) + ' ==== body: ' + JSON.stringify(body),
+            color: 'purple'
+        });
+    });
+};
 
 exports.handler = function (event, context, callback) {
     let retval = 200;
@@ -48,51 +72,15 @@ exports.handler = function (event, context, callback) {
             color: 'red'
         });
 
-        // using this library for http requests: https://github.com/request/request
-        // using this library at the api endpoint: https://github.com/netlify/gotrue
-        // use the PUT /admin/users api endpoint to add this to user record:
-        // {"app_metadata": {"authorization": {"roles": ["admin"]}}}
-        let putOptions = {
-            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
-            method: 'PUT',
-            headers: {
-                Authorization: 'Bearer ' + context.clientContext.identity.token
-            },
-            json: true,
-            body: {
-                app_metadata: {"authorization": {"roles": ["admin"]}}
-            }
-        };
-        request(putOptions, function(error, response, body) {
-            hipchat.notify({
-                message: 'webhook, PUT request durign sinup returned error=' + error +
-                ' response: ' + JSON.stringify(response) + ' ==== body: ' + body,
-                color: 'purple'
-            });
-        });
+        putAdminRoleOnUser(context.clientContext.identity.url, body.user.id, context.clientContext.identity.token);
     }
     else if (body.event === 'login') {
         hipchat.notify({
-            message: 'TODO: do whatever for login of user ' + body.user.email,
+            message: 'TODO: try again to give admin role to user ' + body.user.email,
             color: 'red'
         });
 
-        /*
-        let options = {
-            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
-            method: 'GET',
-            headers:{
-                Authorization: 'Bearer ' + context.clientContext.identity.token
-            }
-        };
-        request(options, function(error, response, body) {
-            hipchat.notify({
-                message: 'webhook, request returned error: ' + error +
-                ' response: ' + JSON.stringify(response) + ' body: ' + body,
-                color: 'purple'
-            });
-        });
-        */
+        putAdminRoleOnUser(context.clientContext.identity.url, body.user.id, context.clientContext.identity.token);
     }
 
     hipchat.notify({

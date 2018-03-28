@@ -3,7 +3,7 @@ const request = require('request');
 const HipChatNotify = require('hipchat-notify');
 let hipchat = new HipChatNotify(4516663, 'tn8neyu93ei7x3jRnYrHuzNtq2RbXXGuIXwZTmwn');
 
-let putAdminRoleOnUser = function(identityUrl, userId, token) {
+let putAdminRoleOnUser = function(identityUrl, userId, token, numTries = 0) {
     // using this library for http requests: https://github.com/request/request
     // using this library at the api endpoint: https://github.com/netlify/gotrue
     // use the PUT /admin/users api endpoint to add this to user record:
@@ -21,10 +21,15 @@ let putAdminRoleOnUser = function(identityUrl, userId, token) {
     };
     request(putOptions, function(error, response, body) {
         hipchat.notify({
-            message: 'webhook, PUT request for userId= ' + userId + ' error=' + error +
+            message: 'webhook, PUT request try=' + numTries + ' for userId=' + userId + ' error=' + error +
             ' response: ' + JSON.stringify(response) + ' ==== body: ' + JSON.stringify(body),
             color: 'purple'
         });
+        if (response.statusCode === 404) {
+            if (numTries < 20) {
+                putAdminRoleOnUser(identityUrl, userId, token, numTries = 1);
+            }
+        }
     });
 };
 

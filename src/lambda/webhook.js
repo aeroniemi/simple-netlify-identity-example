@@ -46,7 +46,8 @@ let postCreateUserWithAdminRole = function(identityUrl, user, token) {
     };
     request(postOptions, function(error, response, body) {
         hipchat.notify({
-            message: 'webhook, POST request with these options: ' + JSON.stringify(postOptions),
+            message: 'webhook, POST request with these options: ' + JSON.stringify(postOptions) +
+            ' and this response ' + response + ' and this body ' + body,
             color: 'red'
         });
     });

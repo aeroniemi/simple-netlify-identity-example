@@ -16,7 +16,7 @@ let putAdminRoleOnUser = function(identityUrl, userId, token) {
         },
         json: true,
         body: {
-            app_metadata: {"authorization": {"roles": ["admin"]}}
+            app_metadata: {"roles": ["admin"]}
         }
     };
     request(putOptions, function(error, response, body) {

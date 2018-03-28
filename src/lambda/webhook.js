@@ -31,6 +31,7 @@ let putAdminRoleOnUser = function(identityUrl, userId, token) {
 exports.handler = function (event, context, callback) {
     let body = JSON.parse(event.body);
     let retval = 200;
+    let outputBody = null;
 
     console.log("webhook");
     console.log("event", event);
@@ -39,6 +40,11 @@ exports.handler = function (event, context, callback) {
     if (body.event === 'validate') {
         // allow new signups only from ntti3.io domain
         let allow = (body.user.email && body.user.email.match(/@ntti3.io$/i));
+        if (allow) {
+            outputBody = {
+                "app_metadata": {"roles": ["admin"]}
+            };
+        }
         retval = allow ? 200 : 401;
     }
     else if (body.event === 'signup') {
@@ -61,7 +67,15 @@ exports.handler = function (event, context, callback) {
         color: 'yellow'
     });
 
-    callback(null, {
-        statusCode: retval
-    });
+    if (outputBody) {
+        callback(null, {
+            statusCode: retval,
+            body: outputBody
+        });
+    }
+    else {
+        callback(null, {
+            statusCode: retval
+        });
+    }
 };

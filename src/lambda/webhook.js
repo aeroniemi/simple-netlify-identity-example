@@ -9,11 +9,19 @@ exports.handler = function(event, context, callback) {
     console.log(event);
     console.log(context);
     hipchat.notify({
-        message: 'webhook, user: ' + JSON.stringify(user),
+        message: 'webhook, context.clientContext.identity: ' + JSON.stringify(context.clientContext.identity),
         color: 'green'
     });
     hipchat.notify({
-        message: 'webhook, event: ' + JSON.stringify(event),
+        message: 'webhook, event.body.event: ' + JSON.stringify(event.body.event),
+        color: 'green'
+    });
+    hipchat.notify({
+        message: 'webhook, event.body.user: ' + JSON.stringify(event.body.user),
+        color: 'green'
+    });
+    hipchat.notify({
+            message: 'webhook, event: ' + JSON.stringify(event),
         color: 'green'
     });
     hipchat.notify({
@@ -26,7 +34,6 @@ exports.handler = function(event, context, callback) {
     });
 
     callback(null, {
-        statusCode: retval,
-        body: "Hello, World, this is the webhook returning code " + retval
+        statusCode: retval
     });
 };

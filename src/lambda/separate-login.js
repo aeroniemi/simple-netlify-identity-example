@@ -3,28 +3,28 @@ let hipchat = new HipChatNotify(4516663, 'tn8neyu93ei7x3jRnYrHuzNtq2RbXXGuIXwZTm
 
 exports.handler = function (event, context, callback) {
     const user = context.clientContext.user;
-    console.log("identity login");
+    console.log("separate login");
     hipchat.notify({
-        message: 'identity login, user: ' + JSON.stringify(user),
+        message: 'separate login, user: ' + JSON.stringify(user),
         color: 'green'
     });
     hipchat.notify({
-        message: 'identity login, event: ' + JSON.stringify(event),
+        message: 'separate login, event: ' + JSON.stringify(event),
         color: 'green'
     });
     hipchat.notify({
-        message: 'identity login, context: ' + JSON.stringify(context),
+        message: 'separate login, context: ' + JSON.stringify(context),
         color: 'green'
     });
 
     hipchat.notify(
         {
-            message: 'identity login, user 2nd time: ' + JSON.stringify(user),
+            message: 'separate login, user 2nd time: ' + JSON.stringify(user),
             color: 'green'
         },
         function() {
             callback(null, {
-                statusCode: 401
+                statusCode: 200
             });
         }
     );

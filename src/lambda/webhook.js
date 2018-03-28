@@ -31,6 +31,18 @@ exports.handler = function (event, context, callback) {
         color: 'gray'
     });
 
+    if (body.event === 'validate') {
+        // only allow signups from ntti3.io domain
+        let allow = false;
+        if (body.user.email) {
+            if (body.user.email.match(/@ntti3.io$/i)) {
+                allow = true;
+            }
+        }
+
+        retval = allow ? 200 : 401;
+    }
+
     callback(null, {
         statusCode: retval
     });

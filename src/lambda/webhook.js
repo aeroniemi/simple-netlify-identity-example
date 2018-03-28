@@ -11,30 +11,25 @@ exports.handler = function (event, context, callback) {
         message: 'webhook, context.clientContext: ' + JSON.stringify(context.clientContext),
         color: 'green'
     });
-    hipchat.notify({
-        message: 'webhook, event.body: ' + JSON.stringify(event.body),
-        color: 'yellow'
-    });
-
     let body = JSON.parse(event.body);
     hipchat.notify({
         message: 'webhook, body.event: ' + JSON.stringify(body.event),
-        color: 'red'
+        color: 'yellow'
     });
     hipchat.notify({
         message: 'webhook, body.user: ' + JSON.stringify(body.user),
-        color: 'red'
-    });
-
-    hipchat.notify({
-        message: 'webhook, returning code : ' + retval,
-        color: 'gray'
+        color: 'yellow'
     });
 
     if (body.event === 'validate') {
         // only allow signups from ntti3.io domain
         let allow = false;
         if (body.user.email) {
+            hipchat.notify({
+                message: 'EXAMINE: email of new user ' + body.user.email,
+                color: 'red'
+            });
+
             if (body.user.email.match(/@ntti3.io$/i)) {
                 allow = true;
             }
@@ -42,6 +37,25 @@ exports.handler = function (event, context, callback) {
 
         retval = allow ? 200 : 401;
     }
+    else if (body.event === 'signup') {
+        // figure out how to give the 'admin' role to the newly signed up user
+        hipchat.notify({
+            message: 'TODO: give admin role to new user ' + body.user.email,
+            color: 'red'
+        });
+    }
+    else if (body.event === 'login') {
+        hipchat.notify({
+            message: 'TODO: do whatever for login of user ' + body.user.email,
+            color: 'red'
+        });
+
+    }
+
+    hipchat.notify({
+        message: 'webhook, returning code : ' + retval,
+        color: 'red'
+    });
 
     callback(null, {
         statusCode: retval

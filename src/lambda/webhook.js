@@ -8,28 +8,20 @@ exports.handler = function (event, context, callback) {
     console.log("event", event);
     console.log("context", context);
     hipchat.notify({
-        message: 'webhook, context.clientContext.identity: ' + JSON.stringify(context.clientContext.identity),
+        message: 'webhook, context.clientContext: ' + JSON.stringify(context.clientContext),
         color: 'green'
     });
     hipchat.notify({
-        message: 'webhook, context.clientContext.user: ' + JSON.stringify(context.clientContext.user),
-        color: 'green'
-    });
-    hipchat.notify({
-        message: 'webhook, context: ' + JSON.stringify(context),
-        color: 'green'
-    });
-    hipchat.notify({
-        message: 'webhook, event.body.event: ' + JSON.stringify(event.body.event),
+        message: 'webhook, event.body: ' + JSON.stringify(event.body),
         color: 'yellow'
     });
     hipchat.notify({
         message: 'webhook, event.body.user: ' + JSON.stringify(event.body.user),
-        color: 'yello'
+        color: 'red'
     });
     hipchat.notify({
         message: 'webhook, event: ' + JSON.stringify(event),
-        color: 'yellow'
+        color: 'purple'
     });
     hipchat.notify({
         message: 'webhook, returning code : ' + retval,

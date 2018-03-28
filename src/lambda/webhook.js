@@ -61,11 +61,12 @@ exports.handler = function (event, context, callback) {
 
         // https://github.com/request/request
         let options = {
-            url: context.clientContext.identity.url + '/user/' + body.user.id,
+            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
             method: 'GET',
             headers:{
                 Authorization: 'Bearer ' + context.clientContext.identity.token
             }
+
         };
 
         request.get(options, function(error, response, body) {

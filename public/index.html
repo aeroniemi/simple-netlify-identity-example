@@ -61,6 +61,8 @@
 
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
+        window.netlifyIdentity.on("error", err => console.error("logged out with error " + err));
+        window.netlifyIdentity.on("close", () => console.log("widget closed"));
 
         updateLoggedIn();
     });

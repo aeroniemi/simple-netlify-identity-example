@@ -26,8 +26,8 @@ let putAdminRoleOnUser = function(identityUrl, userId, token, numTries = 0) {
             color: 'purple'
         });
         if (response.statusCode === 404) {
-            if (numTries < 20) {
-                putAdminRoleOnUser(identityUrl, userId, token, numTries = 1);
+            if (numTries < 3) {
+                putAdminRoleOnUser(identityUrl, userId, token, numTries + 1);
             }
         }
     });

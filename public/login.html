@@ -22,6 +22,7 @@
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
+                console.log('user is ' + JSON.stringify(user));
                 if (user) {
                     $('#username').text(user.email);
                     $('#logged-in').show();

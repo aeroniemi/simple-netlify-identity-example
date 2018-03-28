@@ -36,6 +36,7 @@
         function updateLoggedIn() {
             if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
                 var user = window.netlifyIdentity.gotrue.currentUser();
+                console.log('user is ' + JSON.stringify(user));
                 if (user) {
                   // Note: there's an issue where the JWT token isn't saved to nf_jwt cookie when you use an
                   // external provider like Google to login. This is is https://github.com/netlify/gotrue-js/issues/15

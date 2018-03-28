@@ -44,41 +44,14 @@ exports.handler = function (event, context, callback) {
     else if (body.event === 'signup') {
         // figure out how to give the 'admin' role to the newly signed up user
         hipchat.notify({
-            message: 'TODO: give admin role to new user ' + body.user.email,
+            message: 'give admin role to new user ' + body.user.email,
             color: 'red'
         });
 
-        // https://github.com/netlify/gotrue
-        // use the PUT /user api endpoint
-
+        // using this library for http requests: https://github.com/request/request
+        // using this library at the api endpoint: https://github.com/netlify/gotrue
+        // use the PUT /admin/users api endpoint to add this to user record:
         // {"app_metadata": {"authorization": {"roles": ["admin"]}}}
-    }
-    else if (body.event === 'login') {
-        hipchat.notify({
-            message: 'TODO: do whatever for login of user ' + body.user.email,
-            color: 'red'
-        });
-
-        // https://github.com/request/request
-        let options = {
-            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
-            method: 'GET',
-            headers:{
-                Authorization: 'Bearer ' + context.clientContext.identity.token
-            }
-
-        };
-
-        request(options, function(error, response, body) {
-            hipchat.notify({
-                message: 'webhook, request returned error: ' + error +
-                ' response: ' + JSON.stringify(response) + ' body: ' + body,
-                color: 'purple'
-            });
-        });
-
-        // TODO: move this to signup
-        // TODO: check if body is in right place
         let putOptions = {
             url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
             method: 'PUT',
@@ -90,15 +63,36 @@ exports.handler = function (event, context, callback) {
                 app_metadata: {"authorization": {"roles": ["admin"]}}
             }
         };
-
         request(putOptions, function(error, response, body) {
             hipchat.notify({
-                message: 'webhook, PUT request returned error: ' + error +
+                message: 'webhook, PUT request durign sinup returned error=' + error +
+                ' response: ' + JSON.stringify(response) + ' ==== body: ' + body,
+                color: 'purple'
+            });
+        });
+    }
+    else if (body.event === 'login') {
+        hipchat.notify({
+            message: 'TODO: do whatever for login of user ' + body.user.email,
+            color: 'red'
+        });
+
+        /*
+        let options = {
+            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
+            method: 'GET',
+            headers:{
+                Authorization: 'Bearer ' + context.clientContext.identity.token
+            }
+        };
+        request(options, function(error, response, body) {
+            hipchat.notify({
+                message: 'webhook, request returned error: ' + error +
                 ' response: ' + JSON.stringify(response) + ' body: ' + body,
                 color: 'purple'
             });
         });
-
+        */
     }
 
     hipchat.notify({

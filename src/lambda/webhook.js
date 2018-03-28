@@ -15,14 +15,17 @@ exports.handler = function (event, context, callback) {
         message: 'webhook, event.body: ' + JSON.stringify(event.body),
         color: 'yellow'
     });
+
+    let body = JSON.parse(event.body);
     hipchat.notify({
-        message: 'webhook, event.body.user: ' + JSON.stringify(event.body.user),
+        message: 'webhook, body.event: ' + JSON.stringify(body.event),
         color: 'red'
     });
     hipchat.notify({
-        message: 'webhook, event: ' + JSON.stringify(event),
-        color: 'purple'
+        message: 'webhook, body.user: ' + JSON.stringify(body.user),
+        color: 'red'
     });
+
     hipchat.notify({
         message: 'webhook, returning code : ' + retval,
         color: 'gray'

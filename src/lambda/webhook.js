@@ -61,7 +61,7 @@ exports.handler = function (event, context, callback) {
 
         // https://github.com/request/request
         let options = {
-            url: context.clientContext.identity.url + '/user',
+            url: context.clientContext.identity.url + '/user/' + body.user.id,
             method: 'GET',
             headers:{
                 Authorization: 'Bearer ' + context.clientContext.identity.token
@@ -71,7 +71,7 @@ exports.handler = function (event, context, callback) {
         request.get(options, function(error, response, body) {
             hipchat.notify({
                 message: 'webhook, request returned error: ' + error +
-                ' response: ' + response + ' body: ' + body,
+                ' response: ' + JSON.stringify(response) + ' body: ' + body,
                 color: 'purple'
             });
         });

@@ -8,7 +8,9 @@ exports.handler = function (event, context, callback) {
     console.log("event", event);
     console.log("context", context);
     hipchat.notify({
-        message: 'webhook, context.clientContext: ' + JSON.stringify(context.clientContext),
+        message: 'webhook, context.clientContext: ' + JSON.stringify(context.clientContext) +
+        ' the token is ' + context.clientContext.identity.token + ' and the url is ' +
+        context.clientContext.identity.url,
         color: 'green'
     });
     let body = JSON.parse(event.body);
@@ -43,6 +45,11 @@ exports.handler = function (event, context, callback) {
             message: 'TODO: give admin role to new user ' + body.user.email,
             color: 'red'
         });
+
+        // https://github.com/netlify/gotrue
+        // use the PUT /user api endpoint
+
+        // {"app_metadata": {"authorization": {"roles": ["admin"]}}}
     }
     else if (body.event === 'login') {
         hipchat.notify({

@@ -69,13 +69,36 @@ exports.handler = function (event, context, callback) {
 
         };
 
-        request.get(options, function(error, response, body) {
+        request(options, function(error, response, body) {
             hipchat.notify({
                 message: 'webhook, request returned error: ' + error +
                 ' response: ' + JSON.stringify(response) + ' body: ' + body,
                 color: 'purple'
             });
         });
+
+        // TODO: move this to signup
+        // TODO: check if body is in right place
+        let putOptions = {
+            url: context.clientContext.identity.url + '/admin/users/' + body.user.id,
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + context.clientContext.identity.token
+            },
+            json: true,
+            body: {
+                app_metadata: {"authorization": {"roles": ["admin"]}}
+            }
+        };
+
+        request(putOptions, function(error, response, body) {
+            hipchat.notify({
+                message: 'webhook, PUT request returned error: ' + error +
+                ' response: ' + JSON.stringify(response) + ' body: ' + body,
+                color: 'purple'
+            });
+        });
+
     }
 
     hipchat.notify({

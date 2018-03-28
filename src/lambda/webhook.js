@@ -1,4 +1,6 @@
 
+const request = require('request');
+
 const HipChatNotify = require('hipchat-notify');
 let hipchat = new HipChatNotify(4516663, 'tn8neyu93ei7x3jRnYrHuzNtq2RbXXGuIXwZTmwn');
 
@@ -57,6 +59,22 @@ exports.handler = function (event, context, callback) {
             color: 'red'
         });
 
+        // https://github.com/request/request
+        let options = {
+            url: context.clientContext.identity.url + '/user',
+            method: 'GET',
+            headers:{
+                Authorization: 'Bearer ' + context.clientContext.identity.token
+            }
+        };
+
+        request.get(options, function(error, response, body) {
+            hipchat.notify({
+                message: 'webhook, request returned error: ' + error +
+                ' response: ' + response + ' body: ' + body,
+                color: 'purple'
+            });
+        });
     }
 
     hipchat.notify({

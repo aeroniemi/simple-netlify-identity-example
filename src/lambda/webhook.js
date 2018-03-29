@@ -33,6 +33,7 @@ let putReaderRoleOnUser = function(identityUrl, userId, token) {
 exports.handler = function (event, context, callback) {
     let body = JSON.parse(event.body);
     let retval = 200;
+    let responseBody = null;
 
     console.log("webhook");
     console.log("event", event);
@@ -42,6 +43,9 @@ exports.handler = function (event, context, callback) {
         // allow new signups only from ntti3.io domain
         let allow = (body.user.email && body.user.email.match(/@ntti3.io$/i));
         retval = allow ? 200 : 401;
+        if (allow) {
+            responseBody = {"app_metadata": {"roles": [readerRoleName]}};
+        }
     }
     else if (body.event === 'signup') {
         // if this user doesn't have any roles yet, then add admin role (typically for newly signed up user)
@@ -58,12 +62,20 @@ exports.handler = function (event, context, callback) {
     }
 
     hipchat.notify({
-        message: 'webhook returning code: ' + retval + ' while doing ' +
-            JSON.stringify(body.event) + ' for user: ' + JSON.stringify(body.user),
+        message: 'webhook returning code: ' + retval + ' with responseBody=' + JSON.stringify(responseBody) +
+                 ' while doing ' + JSON.stringify(body.event) + ' for user: ' + JSON.stringify(body.user),
         color: 'yellow'
     });
 
-    callback(null, {
-        statusCode: retval
-    });
+    if (responseBody) {
+        callback(null, {
+            statusCode: retval,
+            body: JSON.stringify(responseBody)
+        });
+    }
+    else {
+        callback(null, {
+            statusCode: retval
+        });
+    }
 };

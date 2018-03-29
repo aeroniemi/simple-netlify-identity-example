@@ -32,9 +32,10 @@ exports.handler = function (event, context, callback) {
     let body = JSON.parse(event.body);
     if (body.event === 'validate') {
         if (body.user.email && body.user.email.match(/@ntti3.io$/i)) {
+            const responseBody = {"app_metadata": {"roles": ["reader"]}};
             callback(null, {
                 statusCode: 200,
-                body: {"app_metadata": {"roles": ["reader"]}}
+                body: JSON.stringify(responseBody)
             });
         }
         else {

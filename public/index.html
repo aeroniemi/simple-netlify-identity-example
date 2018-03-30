@@ -39,10 +39,7 @@
         }
 
         function updateLoggedIn() {
-            var href = window.location.href;
-            console.log('href string is ' + href);
-            if (querystring && href.indexOf('error=server_error') > -1) {
-                console.log('href string has error indicator in it');
+            if (window.location.href && window.location.href.indexOf('error=server_error') > -1) {
                 $('#logged-in').hide();
                 $('#not-logged-in').show();
                 $('#problem-logging-in').show();

@@ -24,10 +24,9 @@
         to the login page.</p>
 </div>
 <div id="problem-logging-in" style="display: none">
-    <p style="color:#3b0000">Please note that you must signup with an
+    <p style="color:#3b0000">Please note that you must sign up with an
         email address on the <strong>ntti3.io</strong> domain.</p>
-    <p>If you proceed to the test folder without logging in, that should fail with you being redirected
-        to the login page.</p>
+    <p>It looks like you used an email address that is not supported.</p>
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -40,8 +39,10 @@
         }
 
         function updateLoggedIn() {
-            var querystring = window.location.search.substring(1);
-            if (querystring && querystring.indexOf('server_error') > -1) {
+            var href = window.location.href;
+            console.log('href string is ' + href);
+            if (querystring && href.indexOf('error=server_error') > -1) {
+                console.log('href string has error indicator in it');
                 $('#logged-in').hide();
                 $('#not-logged-in').show();
                 $('#problem-logging-in').show();

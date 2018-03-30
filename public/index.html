@@ -23,6 +23,12 @@
     <p>If you proceed to the test folder without logging in, that should fail with you being redirected
         to the login page.</p>
 </div>
+<div id="problem-logging-in" style="display: none">
+    <p style="color:#3b0000">Please note that you must signup with an
+        email address on the <strong>ntti3.io</strong> domain.</p>
+    <p>If you proceed to the test folder without logging in, that should fail with you being redirected
+        to the login page.</p>
+</div>
 <script type="text/javascript">
     $(document).ready(function() {
         function setOneDayCookie(name, value) {
@@ -34,35 +40,43 @@
         }
 
         function updateLoggedIn() {
-            if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
-                var user = window.netlifyIdentity.gotrue.currentUser();
-                console.log('user is ' + JSON.stringify(user));
-                if (user) {
-                  console.log('roles are ' + JSON.stringify(user.app_metadata.roles));
-                  // Note: there's an issue where the JWT token isn't saved to nf_jwt cookie when you use an
-                  // external provider like Google to login. This is is https://github.com/netlify/gotrue-js/issues/15
-                  // Work-around: you can manually save the JWT token in a cookie named nf_jwt.
-                  // The access_token is available in the user object or you can renew the token by calling
-                  // netlifyIdentity.gotrue.currentUser().jwt().then(jwt => mySetCookie('nf_jwt', jwt))
-                  user.jwt()
-                    .then((jwt) => {
-                      setOneDayCookie('nf_jwt', jwt);
-                      $('#username').text(user.email);
-                      $('#logged-in').show();
-                      $('#not-logged-in').hide();
-                    });
+            var querystring = window.location.search.substring(1);
+            if (querystring && querystring.indexOf('server_error') > -1) {
+                $('#logged-in').hide();
+                $('#not-logged-in').show();
+                $('#problem-logging-in').show();
+            }
+            else {
+                if (window.netlifyIdentity && window.netlifyIdentity.gotrue) {
+                    var user = window.netlifyIdentity.gotrue.currentUser();
+                    // console.log('user is ' + JSON.stringify(user));
+                    if (user) {
+                        // console.log('roles are ' + JSON.stringify(user.app_metadata.roles));
+
+                        // Note: there's an issue where the JWT token isn't saved to nf_jwt cookie when you use an
+                        // external provider like Google to login. This is is https://github.com/netlify/gotrue-js/issues/15
+                        // Work-around: you can manually save the JWT token in a cookie named nf_jwt.
+                        // The access_token is available in the user object or you can renew the token by calling
+                        // netlifyIdentity.gotrue.currentUser().jwt().then(jwt => mySetCookie('nf_jwt', jwt))
+                        user.jwt()
+                            .then((jwt) => {
+                                setOneDayCookie('nf_jwt', jwt);
+                                $('#username').text(user.email);
+                                $('#logged-in').show();
+                                $('#not-logged-in').hide();
+                            });
+                    }
+                    else {
+                        $('#logged-in').hide();
+                        $('#not-logged-in').show();
+                    }
                 }
-                else {
-                    $('#logged-in').hide();
-                    $('#not-logged-in').show();
-                }
+                $('#problem-logging-in').hide();
             }
         }
 
         window.netlifyIdentity.on("login", updateLoggedIn);
         window.netlifyIdentity.on("logout", updateLoggedIn);
-        window.netlifyIdentity.on("error", err => console.error("logged out with error " + err));
-        window.netlifyIdentity.on("close", () => console.log("widget closed"));
 
         updateLoggedIn();
     });
